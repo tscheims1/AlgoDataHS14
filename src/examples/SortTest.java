@@ -101,7 +101,7 @@ public class SortTest {
 		int right = to;
 		while(true){
 			while(a[++left] < pivot); // stops at a swap candidate 
-			while(a[--right] >= pivot)
+			while(a[--right] > pivot)
 			{
 				if (right==from) break; // break right decrementing when we reach from
 			}
@@ -118,7 +118,7 @@ public class SortTest {
 
 	public static void main(String[] args) {
 		long t1=0,t2=0,te1=0,te2=0,eTime=0,time=0;
-		int n = 100000000;
+		int n = 10000000;
 		// we need a random generator
 		Random rand=new Random();
 		//rand.setSeed(54326346); // initialize always in the same state
@@ -126,7 +126,7 @@ public class SortTest {
 		// new array
 		int [] a = new int[n];
 		// fill it randomly
-		for (int i=0;i<a.length ;i++) a[i]=i;//rand.nextInt(n);
+		for (int i=0;i<a.length ;i++) a[i]=n-i;rand.nextInt(n);
 		cnt=0;  // for statistcs reasons
 		// get Time
 		te1=System.currentTimeMillis();
