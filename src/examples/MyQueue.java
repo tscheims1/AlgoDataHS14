@@ -14,7 +14,14 @@ public class MyQueue<E> implements Queue<E> {
 	private int out; // points to the next element to be dequeued
 	private int size;
 	
+	public MyQueue(){
+		this(1);
+	}
 
+	public MyQueue(int capacity){
+		stor =(E[]) new Object[capacity];
+	}
+	
 	/* (non-Javadoc)
 	 * @see examples.Queue#enqueue(java.lang.Object)
 	 */
@@ -30,8 +37,14 @@ public class MyQueue<E> implements Queue<E> {
 	 * 
 	 */
 	private void expand() {
-		// TODO Auto-generated method stub
-		
+		System.out.println("expanding....");
+		E [] old = stor;
+		stor = (E[]) new Object[2*stor.length];
+		for (int i=0;i<size;i++){
+			stor[i]=old[(out+i) % old.length];
+		}
+		in=size;
+		out=0;
 	}
 
 	/* (non-Javadoc)
@@ -39,8 +52,11 @@ public class MyQueue<E> implements Queue<E> {
 	 */
 	@Override
 	public E dequeue() {
-		// TODO Auto-generated method stub
-		return null;
+		if (size==0) throw new RuntimeException("Empty Queue!");
+		E ret = stor[out++];
+		if (out == stor.length) out = 0;
+		size--;		
+		return ret;
 	}
 
 	/* (non-Javadoc)
@@ -48,8 +64,8 @@ public class MyQueue<E> implements Queue<E> {
 	 */
 	@Override
 	public E head() {
-		// TODO Auto-generated method stub
-		return null;
+		if (size==0) throw new RuntimeException("Empty Queue!");
+		return stor[out];
 	}
 
 	/* (non-Javadoc)
@@ -57,8 +73,7 @@ public class MyQueue<E> implements Queue<E> {
 	 */
 	@Override
 	public int size() {
-		// TODO Auto-generated method stub
-		return 0;
+		return size;
 	}
 
 	/* (non-Javadoc)
@@ -66,8 +81,7 @@ public class MyQueue<E> implements Queue<E> {
 	 */
 	@Override
 	public boolean isEmpty() {
-		// TODO Auto-generated method stub
-		return false;
+		return size==0;
 	}
 
 
