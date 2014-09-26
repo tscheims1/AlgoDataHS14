@@ -25,6 +25,18 @@ public class MyLinkedList<E> implements List<E> {
 		
 	}
 	
+	private LNode castToLNode(Position p){
+			LNode n;
+			try {
+				n = (LNode) p;
+			} catch (ClassCastException e) {
+				throw new RuntimeException("This is not a Position belonging to MyLinkedList"); 
+			}
+			if (n.creator == null) throw new RuntimeException("position was allready deleted!");
+			if (n.creator != this) throw new RuntimeException("position belongs to another List instance!");			
+			return n;
+	}
+	
 	// instance variables
 	
 	private LNode first, last;
@@ -70,10 +82,7 @@ public class MyLinkedList<E> implements List<E> {
 	 */
 	@Override
 	public Position<E> next(Position<E> p) {
-		LNode n = (LNode) p;
-		if (n.creator == null) throw new RuntimeException("position was allready deleted!");
-		if (n.creator != this) throw new RuntimeException("position belongs to another List instance!");
-		return n.next;
+		return castToLNode(p).next;
 	}
 
 	/* (non-Javadoc)
