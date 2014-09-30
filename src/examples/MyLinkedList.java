@@ -124,10 +124,10 @@ public class MyLinkedList<E> implements List<E> {
 		LNode n = new LNode();
 		n.elem = o;
 		n.prev = last;
-		if (first != null) first.prev = n;
-		else last = n;
+		if (last != null) last.next = n;
+		else first = n;
 		size++;	
-		first = n;	
+		last = n;	
 		return n;
 	}
 
@@ -136,8 +136,20 @@ public class MyLinkedList<E> implements List<E> {
 	 */
 	@Override
 	public Position<E> insertBefore(Position<E> p, E o) {
-		// TODO Auto-generated method stub
-		return null;
+		LNode n = castToLNode(p);
+		LNode newN = new LNode();
+		newN.elem = o;
+		newN.next = n;
+		newN.prev = n.prev;
+		if (n==first){
+			first = newN; 
+		}
+		else {
+			n.prev.next = newN;
+		}
+		n.prev = newN;
+		size++;
+		return newN;
 	}
 
 	/* (non-Javadoc)
@@ -164,6 +176,7 @@ public class MyLinkedList<E> implements List<E> {
 			if (first != null) first.prev = null;
 		}
 		else n.prev.next = n.next;
+		
 		// right side:
 		if (n==last) {
 			last =n.prev;
@@ -188,16 +201,15 @@ public class MyLinkedList<E> implements List<E> {
 			@Override
 			public Position<E> next() {
 				LNode ret = current;
+				// switch to next
 				current = current.next;
 				return ret;
 			}
 
 			@Override
 			public void remove() {
-				// not implemented
-			}
-			
-		};
+				throw new UnsupportedOperationException();
+			}};
 	}
 
 	/* (non-Javadoc)
@@ -205,8 +217,25 @@ public class MyLinkedList<E> implements List<E> {
 	 */
 	@Override
 	public Iterator<E> elements() {
-		// TODO Auto-generated method stub
-		return null;
+		return new Iterator<E>(){
+			LNode current = first;
+			@Override
+			public boolean hasNext() {
+				return current != null;
+			}
+
+			@Override
+			public E next() {
+				LNode ret = current;
+				// switch to next
+				current = current.next;
+				return ret.elem;
+			}
+
+			@Override
+			public void remove() {
+				throw new UnsupportedOperationException();
+			}};
 	}
 
 	/* (non-Javadoc)
@@ -222,8 +251,7 @@ public class MyLinkedList<E> implements List<E> {
 	 */
 	@Override
 	public boolean isEmpty() {
-		// TODO Auto-generated method stub
-		return false;
+		return size==0;
 	}
 
 	/**
@@ -231,10 +259,10 @@ public class MyLinkedList<E> implements List<E> {
 	 */
 	public static void main(String[] args) {
 		List<String> li = new MyLinkedList<>();
-		Position pp = li.insertFirst("hans");
-		li.insertFirst("heiri");
-		pp = li.insertFirst("susi");		
-		li.insertFirst("heidi");
+		Position pp = li.insertLast("hans");
+		li.insertLast("heiri");
+		pp = li.insertLast("susi");		
+		li.insertLast("heidi");
 		li.remove(pp);
 
 		Position<String> p = li.first();
@@ -242,6 +270,8 @@ public class MyLinkedList<E> implements List<E> {
 			System.out.println(p.element());
 			p = li.next(p);
 		}
+		Iterator<Position<String>> it = li.positions();
+		while (it.hasNext()) System.out.println(it.next().element());
 		
 	}
 
