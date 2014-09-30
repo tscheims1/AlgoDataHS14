@@ -33,7 +33,7 @@ public class MyLinkedList<E> implements List<E> {
 				throw new RuntimeException("This is not a Position belonging to MyLinkedList"); 
 			}
 			if (n.creator == null) throw new RuntimeException("position was allready deleted!");
-			if (n.creator != this) throw new RuntimeException("position belongs to another List instance!");			
+			if (n.creator != this) throw new RuntimeException("position belongs to another MyLinkedList instance!");			
 			return n;
 	}
 	
@@ -55,8 +55,7 @@ public class MyLinkedList<E> implements List<E> {
 	 */
 	@Override
 	public Position<E> last() {
-		// TODO Auto-generated method stub
-		return null;
+		return last;
 	}
 
 	/* (non-Javadoc)
@@ -64,8 +63,7 @@ public class MyLinkedList<E> implements List<E> {
 	 */
 	@Override
 	public boolean isFirst(Position<E> p) {
-		// TODO Auto-generated method stub
-		return false;
+		return castToLNode(p)==first;
 	}
 
 	/* (non-Javadoc)
@@ -73,8 +71,7 @@ public class MyLinkedList<E> implements List<E> {
 	 */
 	@Override
 	public boolean isLast(Position<E> p) {
-		// TODO Auto-generated method stub
-		return false;
+		return castToLNode(p)==last;
 	}
 
 	/* (non-Javadoc)
@@ -90,8 +87,7 @@ public class MyLinkedList<E> implements List<E> {
 	 */
 	@Override
 	public Position<E> previous(Position<E> p) {
-		// TODO Auto-generated method stub
-		return null;
+		return castToLNode(p).prev;
 	}
 
 	/* (non-Javadoc)
@@ -99,8 +95,10 @@ public class MyLinkedList<E> implements List<E> {
 	 */
 	@Override
 	public E replaceElement(Position<E> p, E o) {
-		// TODO Auto-generated method stub
-		return null;
+		LNode n = castToLNode(p);
+		E old = n.elem;
+		n.elem = o;
+		return old;
 	}
 
 	/* (non-Javadoc)
@@ -123,8 +121,14 @@ public class MyLinkedList<E> implements List<E> {
 	 */
 	@Override
 	public Position<E> insertLast(E o) {
-		// TODO Auto-generated method stub
-		return null;
+		LNode n = new LNode();
+		n.elem = o;
+		n.prev = last;
+		if (first != null) first.prev = n;
+		else last = n;
+		size++;	
+		first = n;	
+		return n;
 	}
 
 	/* (non-Javadoc)
@@ -150,8 +154,23 @@ public class MyLinkedList<E> implements List<E> {
 	 */
 	@Override
 	public void remove(Position<E> p) {
-		// TODO Auto-generated method stub
-
+		LNode n = castToLNode(p);
+		size--;
+		n.creator = null; // invalidate p
+		
+		// left side:
+		if (n==first) {
+			first=n.next;
+			if (first != null) first.prev = null;
+		}
+		else n.prev.next = n.next;
+		// right side:
+		if (n==last) {
+			last =n.prev;
+			if (last!=null) last.next = null;
+		}
+		else n.next.prev = n.prev;
+		
 	}
 
 	/* (non-Javadoc)
@@ -159,8 +178,26 @@ public class MyLinkedList<E> implements List<E> {
 	 */
 	@Override
 	public Iterator<Position<E>> positions() {
-		// TODO Auto-generated method stub
-		return null;
+		return new Iterator<Position<E>>(){
+			LNode current = first;
+			@Override
+			public boolean hasNext() {
+				return current != null;
+			}
+
+			@Override
+			public Position<E> next() {
+				LNode ret = current;
+				current = current.next;
+				return ret;
+			}
+
+			@Override
+			public void remove() {
+				// not implemented
+			}
+			
+		};
 	}
 
 	/* (non-Javadoc)
@@ -194,15 +231,18 @@ public class MyLinkedList<E> implements List<E> {
 	 */
 	public static void main(String[] args) {
 		List<String> li = new MyLinkedList<>();
-		li.insertFirst("hans");
+		Position pp = li.insertFirst("hans");
 		li.insertFirst("heiri");
-		Position pp = li.insertFirst("susi");
+		pp = li.insertFirst("susi");		
 		li.insertFirst("heidi");
+		li.remove(pp);
+
 		Position<String> p = li.first();
 		while(p != null){
 			System.out.println(p.element());
 			p = li.next(p);
 		}
+		
 	}
 
 }
