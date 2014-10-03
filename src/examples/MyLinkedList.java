@@ -157,8 +157,20 @@ public class MyLinkedList<E> implements List<E> {
 	 */
 	@Override
 	public Position<E> insertAfter(Position<E> p, E o) {
-		// TODO Auto-generated method stub
-		return null;
+		LNode n = castToLNode(p);
+		LNode newN = new LNode();
+		newN.elem = o;
+		newN.prev = n;
+		newN.next = n.next;
+		if (n==last){
+			last = newN; 
+		}
+		else {
+			n.next.prev = newN;
+		}
+		n.next = newN;
+		size++;
+		return newN;
 	}
 
 	/* (non-Javadoc)

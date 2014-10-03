@@ -15,8 +15,8 @@ public class MyTree<E> implements Tree<E> {
 	class TNode implements Position<E>{
 		TNode parent;
 		E elem;
-		MyLinkedList<Position<E>> children = new MyLinkedList<>();
-		Position<Position<E>> mySiblingPos;
+		MyLinkedList<TNode> children = new MyLinkedList<>();
+		Position<TNode> mySiblingPos;
 		Object creator = MyTree.this;
 
 		/* (non-Javadoc)
@@ -195,21 +195,7 @@ public class MyTree<E> implements Tree<E> {
 		// TODO Auto-generated method stub
 		return null;
 	}
-
-	public void print(){
-		print(root);
-	}
-	/**
-	 * @param root2
-	 */
-	private void print(TNode p) {
-		// print the subtree originating at p
-		System.out.println(p.elem);
-		Iterator<Position<E>> it = p.children.elements();
-		while(it.hasNext()){
-			print((TNode)it.next());
-		}
-	}
+	
 
 	/**
 	 * @param args
@@ -223,8 +209,6 @@ public class MyTree<E> implements Tree<E> {
 		t.addChild(pB, "E");
 		t.addChild(pB, "F");
 		t.addChild(pD, "G");
-		t.print();
-		
 	}
 
 }
