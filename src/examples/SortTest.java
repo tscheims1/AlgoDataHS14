@@ -13,7 +13,46 @@ public class SortTest {
 	
 	public static long cnt;
 	static Random rand = new Random();
+
+	public static void heapSort(int [] a){
+		int n = a.length;
+		// first we make 'a' a max heap:
+		for (int i=1; i<n; i++) upHeap(a,i);
+		// Now we remove the max element and move it to the  
+		// last position (which is now free)-> heap has only n-1.
+		// Repeat until all elements are at place.
+		for (int i=n-1;i>0;i--){
+			swap(a,i,0);
+			downHeap(a,0,i); 
+		}
+		
+	}
 	
+	
+	
+	/**
+	 * @param a
+	 * @param i
+	 * @param i2
+	 */
+	private static void downHeap(int[] a, int i, int len) {
+		// assume a [i..len-1] is a heap, but the element
+		// at position i possibly violates the heap condition
+	}
+
+
+
+	/**
+	 * @param a
+	 * @param i
+	 */
+	private static void upHeap(int[] a, int i) {
+		// assume a[0..i-1] is a heap swap element
+		// at position i with its parent and so on
+		// until a[0..i] is a max-heap
+	}
+
+
 
 	/**
 	 * @param a int aray

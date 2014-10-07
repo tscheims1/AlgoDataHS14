@@ -85,8 +85,25 @@ public class MyTree<E> implements Tree<E> {
 	 */
 	@Override
 	public Iterator<Position<E>> childrenPositions(Position<E> parent) {
-		// TODO Auto-generated method stub
-		return null;
+		final TNode p = castToTNode(parent);
+		return new Iterator<Position<E>>(){
+			Iterator<TNode> it  = p.children.elements();
+			@Override
+			public boolean hasNext() {
+				return it.hasNext();
+			}
+
+			@Override
+			public Position<E> next() {
+				return it.next();
+			}
+
+			@Override
+			public void remove() {
+				throw new RuntimeException("please use the 'remove' method of MyTree");
+			}
+			
+		};
 	}
 
 	/* (non-Javadoc)
@@ -120,8 +137,8 @@ public class MyTree<E> implements Tree<E> {
 	 */
 	@Override
 	public int numberOfChildren(Position<E> parent) {
-		// TODO Auto-generated method stub
-		return 0;
+		TNode p = castToTNode(parent);
+		return p.children.size();
 	}
 
 	/* (non-Javadoc)
@@ -162,7 +179,7 @@ public class MyTree<E> implements Tree<E> {
 	@Override
 	public Position<E> addSiblingAfter(Position<E> sibling, E o) {
 		TNode sib = castToTNode(sibling);
-		if (sib == root) throw new RuntimeException("root can not have no siblings!");
+		if (sib == root) throw new RuntimeException("root can not have siblings!");
 		TNode newN = new TNode();
 		newN.elem = o;
 		newN.parent = sib.parent;
@@ -185,8 +202,12 @@ public class MyTree<E> implements Tree<E> {
 	 */
 	@Override
 	public void remove(Position<E> p) {
-		// TODO Auto-generated method stub
-
+		TNode n = castToTNode(p);
+		if (n.children.size()>0) throw new RuntimeException("can not remove node with children!");
+		n.creator = null;
+		size--;
+		if (n==root) root = null;
+		else n.parent.children.remove(n.mySiblingPos);
 	}
 
 	/* (non-Javadoc)
