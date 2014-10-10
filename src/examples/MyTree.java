@@ -6,10 +6,6 @@ package examples;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-import javax.naming.OperationNotSupportedException;
-
-import examples.MyLinkedList.LNode;
-
 /**
  * @author ps
  *
@@ -39,7 +35,7 @@ public class MyTree<E> implements Tree<E> {
 	private TNode root;
 	private int size;
 	
-	private TNode castToTNode(Position p){
+	private TNode castToTNode(Position<E> p){
 		TNode n;
 		try {
 			n = (TNode) p;
@@ -193,8 +189,14 @@ public class MyTree<E> implements Tree<E> {
 	 */
 	@Override
 	public Position<E> addSiblingBefore(Position<E> sibling, E o) {
-		// TODO Auto-generated method stub
-		return null;
+		TNode sib = castToTNode(sibling);
+		if (sib == root) throw new RuntimeException("root can not have siblings!");
+		TNode newN = new TNode();
+		newN.elem = o;
+		newN.parent = sib.parent;
+		newN.mySiblingPos = sib.parent.children.insertBefore(sib.mySiblingPos,newN);
+		size++;
+		return newN;
 	}
 
 	/* (non-Javadoc)
@@ -215,8 +217,8 @@ public class MyTree<E> implements Tree<E> {
 	 */
 	@Override
 	public boolean isExternal(Position<E> p) {
-		// TODO Auto-generated method stub
-		return false;
+		TNode n = castToTNode(p);
+		return n.children.size()==0;
 	}
 
 	/* (non-Javadoc)
@@ -224,8 +226,8 @@ public class MyTree<E> implements Tree<E> {
 	 */
 	@Override
 	public boolean isInternal(Position<E> p) {
-		// TODO Auto-generated method stub
-		return false;
+		TNode n = castToTNode(p);
+		return n.children.size() != 0;
 	}
 
 	/* (non-Javadoc)
@@ -241,8 +243,10 @@ public class MyTree<E> implements Tree<E> {
 	 */
 	@Override
 	public E replaceElement(Position<E> p, E o) {
-		// TODO Auto-generated method stub
-		return null;
+		TNode n = castToTNode(p);
+		E old = n.elem;
+		n.elem = o;
+		return old;
 	}
 	
 	public void print(){
