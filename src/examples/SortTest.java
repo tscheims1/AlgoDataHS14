@@ -18,6 +18,7 @@ public class SortTest {
 		int n = a.length;
 		// first we make 'a' a max-heap:
 		for (int i=1; i<n; i++) upHeap(a,i);
+		System.out.println("heap? " + checkHeap(a,0));
 		// Now we remove the max element and move it to the  
 		// last position of the array 'a'. repair the heap with 'downHeap'
 		// Heap has now only n-1 elements.
@@ -25,8 +26,7 @@ public class SortTest {
 		for (int i=n-1; i>=0; i--){
 			swap(a,i,0);
 			downHeap(a,0,i); 
-		}
-		
+		}	
 	}
 	
 	
@@ -40,8 +40,16 @@ public class SortTest {
 		// assume a [i..len-1] is a heap, but the element
 		// at position i possibly violates the heap condition.
 		// swap a[i] with its bigger child until a[i..len-1] is a heap.
-	
-		
+		int left = i*2+1;
+		while (left < len){
+			int cand = left;
+			int right = left+1;
+			if (right < len && a[right] > a[left]) cand = right;
+			if (a[i] >= a[cand]) break;
+			swap(a,i,cand);
+			i = cand;
+			left = i*2+1; 
+		} 		
 	}
 
 
@@ -54,7 +62,13 @@ public class SortTest {
 		// assume a[0..i-1] is a heap swap element
 		// at position i with its parent and so on
 		// until a[0..i] is a max-heap
-	
+		int parent = (i-1)/2;
+		while (i>0){
+			if (a[parent] >= a[i]) break;
+			swap(a,i,parent);
+			i = parent;
+			parent = (i-1)/2;
+		}
 	}
 
 	static boolean checkHeap(int a[], int len){
@@ -168,7 +182,7 @@ public class SortTest {
 
 	public static void main(String[] args) {
 		long t1=0,t2=0,te1=0,te2=0,eTime=0,time=0;
-		int n = 10000000;
+		int n = 100000;
 		// we need a random generator
 		Random rand=new Random();
 		//rand.setSeed(54326346); // initialize always in the same state
@@ -181,7 +195,7 @@ public class SortTest {
 		// get Time
 		te1=System.currentTimeMillis();
 		t1 = threadBean.getCurrentThreadCpuTime();
-		heapSort(a);
+		bubbleSort(a);
 		te2 = System.currentTimeMillis();
 		t2 = threadBean.getCurrentThreadCpuTime();
 		time=t2-t1;
