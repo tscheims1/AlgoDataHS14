@@ -4,6 +4,7 @@
 package examples;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Random;
 
 /**
@@ -89,13 +90,27 @@ public class MyPriorityQueue<K extends Comparable<? super K>, E> implements
 	 * @param pos 
 	 */
 	private void upHeap(int i) {
-		
+		while (i > 1 && locs[i].key.compareTo(locs[i/2].key) < 0){
+			swap(i,i/2);
+			i=i/2;
+		}
 	}
 
 	/**
 	 * @param i
 	 */
 	private void downHeap(int i) {
+		int left = i*2;
+		while (left < size){
+			int right = left+1;
+			int cand = left;
+			if (right < size && 
+					locs[left].key.compareTo(locs[right].key) > 0) cand = right;
+			if (locs[i].key.compareTo(locs[cand].key) <= 0) break;
+			swap(i,cand);
+			i=cand;
+			left=i*2;
+		}
 		
 	}
 	
@@ -164,14 +179,15 @@ public class MyPriorityQueue<K extends Comparable<? super K>, E> implements
 		return true;
 	}
 	static public void main(String[] argv){
-		int N=1000000;
+		int N=10000000;
+		HashMap<Double,String> hm = new HashMap<>();
+		java.util.PriorityQueue<Double> s = new java.util.PriorityQueue<Double>();
 		MyPriorityQueue<Double,String> pq = new MyPriorityQueue<>();
 		Locator<Double,String>[] locs = new Locator[N];
 		Random ra = new Random(63465);
 		for(int i=0;i<N/2;i++) locs[i]=pq.insert(ra.nextDouble(),null);
 		for(int i=0;i<N/2;i++) locs[i+N/2]=pq.insert(ra.nextDouble(),null);
-		for(int i=0;i<N/2;i++) pq.removeMin();
-		System.out.println(pq.isHeap());
-	
+		for(int i=0;i<N;i++) pq.removeMin();
+		System.out.println(pq.isHeap());	
 	}
 }
