@@ -118,11 +118,23 @@ public class MyAVLTree<K extends Comparable<? super K>, E> implements
 	 */
 	@Override
 	public Locator<K, E> insert(K key, E o) {
-		return null;
+		AVLNode n = root;
+		while ( ! n.isExternal()){
+			int comp = key.compareTo(n.key);
+			if (comp<=0) n=n.left;
+			else n=n.right;
+		}
+		n.expand(key, o);
+		size++;
+		return n;
 	}
 
 	private void adjustHeightAboveAndRebalance(AVLNode n){
 		// corrrect the height of all ancesters of n
+		n = n.parent;
+		while (n != null){
+			
+		}
 	}
 	
 	
@@ -207,7 +219,7 @@ public class MyAVLTree<K extends Comparable<? super K>, E> implements
 	}
 	
 	public void print(){
-		print(root,""); 
+		prittyPrint(root,""); 
 	}
 	
 	
@@ -246,12 +258,12 @@ public class MyAVLTree<K extends Comparable<? super K>, E> implements
 	public static void main(String[] argv){
 		MyAVLTree<Integer, String> t = new MyAVLTree<>();
 		Random rand = new Random();
-		int n  = 10;
+		int n  = 20;
 		Locator<Integer,String>[] locs = new Locator[n];
 		long time1 = System.currentTimeMillis();
 		for (int i=0;i<n;i++) {
 			locs[i]=t.insert(rand.nextInt(90)+10,""+i);
-			//locs[i]=t.insert(i, "bla");
+			// locs[i]=t.insert(i, "bla");
 		}
 		t.print();
 	}
