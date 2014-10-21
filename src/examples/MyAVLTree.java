@@ -161,6 +161,17 @@ public class MyAVLTree<K extends Comparable<? super K>, E> implements
 	 */
 	@Override
 	public void remove(Locator<K, E> loc) {
+		AVLNode n = checkAndCast(loc);
+		if (n.left.isExternal() || n.right.isExternal()) removeAboveExternal(n);
+		// find a candidate to replace  'loc'
+		
+	}
+
+
+	/**
+	 * @param n
+	 */
+	private void removeAboveExternal(MyAVLTree<K, E>.AVLNode n) {
 		// TODO Auto-generated method stub
 		
 	}
