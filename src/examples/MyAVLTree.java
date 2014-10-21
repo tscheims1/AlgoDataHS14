@@ -168,6 +168,19 @@ public class MyAVLTree<K extends Comparable<? super K>, E> implements
 		}
 		else {
 			// find a candidate to replace  'loc'
+			AVLNode v = n.left;
+			while (! v.right.isExternal()) v=v.right;
+			w = removeAboveExternal(v);
+			// replace n with v
+			v.parent = n.parent;
+			if (v.parent == null) root=v;
+			else if (n.isLeftChild()) n.parent.left = v;
+			else if (n.isRightChild()) n.parent.right = v;
+			v.height = n.height;
+			v.left = n.left;
+			v.left.parent = v;
+			v.right = n.right;
+			v.right.parent = v;
 		}
 		adjustHeightAboveAndRebalance(w);
 		size--;
@@ -180,8 +193,16 @@ public class MyAVLTree<K extends Comparable<? super K>, E> implements
 	 * @param n
 	 */
 	private AVLNode removeAboveExternal(AVLNode n) {
-		//  returns the node which takes the place of n
-		return null;
+		AVLNode w;
+		
+		if (n.left.isExternal()) w = n.right;
+		else w = n.left;
+
+		if (n.isLeftChild()) n.parent.left = w;
+		else if (n.isRightChild()) n.parent.right =w;
+		w.parent = n.parent;
+		if (n==root) root = w;
+		return w;
 	}
 
 
@@ -406,18 +427,19 @@ public class MyAVLTree<K extends Comparable<? super K>, E> implements
 	public static void main(String[] argv){
 		MyAVLTree<Integer, String> t = new MyAVLTree<>();
 		Random rand = new Random(34643);
-		int n  = 1000000;
+		int n  = 20;
 		Locator<Integer,String>[] locs = new Locator[n];
 		long time1 = System.currentTimeMillis();
 		for (int i=0;i<n;i++) {
 			// locs[i]=t.insert(rand.nextInt(n),""+i);
 			locs[i]=t.insert(i, "bla");
 		}
+		for (int i= 0; i<n/2; i++ ) t.remove(locs[i]);
 		long time2 = System.currentTimeMillis(); 
 		System.out.println(time2-time1);
 		System.out.println(t.root.height);
 		// System.out.println((t.find(13).element()));
-//		t.print();
+		t.print();
 //		Locator<Integer,String> loc = t.min();
 //		while (loc != null){
 //			System.out.println(loc.key());
