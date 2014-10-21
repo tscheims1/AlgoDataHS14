@@ -154,14 +154,6 @@ public class MyAVLTree<K extends Comparable<? super K>, E> implements
 	
 
 
-	/**
-	 * @param n
-	 * @return
-	 */
-	private MyAVLTree<K, E>.AVLNode  restructure(AVLNode n) {
-		// TODO Auto-generated method stub
-		return n;
-	}
 
 
 	/* (non-Javadoc)
@@ -199,8 +191,16 @@ public class MyAVLTree<K extends Comparable<? super K>, E> implements
 	 */
 	@Override
 	public Locator<K, E> next(Locator<K, E> loc) {
-		// TODO Auto-generated method stub
-		return null;
+		AVLNode n = checkAndCast(loc);
+		if (n.right.isExternal()){
+			while (n.isRightChild()) n = n.parent; 
+			n = n.parent;
+		}
+		else { 
+			n = n.right;
+			while (! n.left.isExternal()) n=n.left;
+		}
+		return n;
 	}
 
 
@@ -219,8 +219,10 @@ public class MyAVLTree<K extends Comparable<? super K>, E> implements
 	 */
 	@Override
 	public Locator<K, E> min() {
-		// TODO Auto-generated method stub
-		return null;
+		if (size == 0) return null;
+		AVLNode n = root;
+		while ( ! n.left.isExternal()) n=n.left;;
+		return n;
 	}
 
 
@@ -246,6 +248,109 @@ public class MyAVLTree<K extends Comparable<? super K>, E> implements
 		prittyPrint(root,""); 
 	}
 	
+	private AVLNode restructure(AVLNode n) {
+		// cnt++;
+		// n is unbalanced
+		// returns the node that takes the position of n
+		AVLNode p=n.parent,z=n,x=null,y=null,
+		a=null,b=null,c=null, t1=null,t2=null; 
+		// t0 and t3 never change their parent, 
+		// that's why we don't need them 
+		if (z.left.height > z.right.height){
+			//   z
+			//  /
+			// y
+			c=z;
+			y=z.left;
+			if (y.left.height >=y.right.height){
+				// in case we have two equal branches
+				// concidering the length we take alway s the single
+				// rotation
+				//     z
+				//    /
+				//   y
+				//  /
+				// x
+				x=y.left;
+				t1=x.right;
+				t2=y.right;
+				b=y;
+				a=x;
+			}
+			else {
+				//     z
+				//    /
+				//   y
+				//   \  
+				//    x
+				x=y.right;
+				t1=x.left;
+				t2=x.right;
+				a=y;
+				b=x;
+			}
+		}
+		else{
+			// z
+			//   \
+			//    y
+			a=z;
+			y=z.right;
+			if (y.right.height >= y.left.height){
+				//  z
+				//   \
+				//    y
+				//     \  
+				//      x
+				x=y.right;
+				b=y;
+				c=x;
+				t1=y.left;
+				t2=x.left;
+			}
+			else {
+				//  z
+				//   \
+				//    y
+				//    /  
+				//   x
+				x=y.left;
+				b=x;
+				c=y;
+				t1=x.left;
+				t2=x.right;
+			}
+		}		
+		// umhaengen
+		b.parent = p;
+		if (p != null){
+			if (p.left == z) {
+				p.left=b;
+			}
+			else p.right=b;
+		}
+		else {
+			root=b;
+		}
+		b.right = c;
+		b.left = a;
+		// und umgekehrt
+		a.parent = b;
+		c.parent = b;
+
+		// subtrees:
+		a.right = t1;
+		t1.parent = a;
+		c.left = t2;
+		t2.parent = c;
+		
+		
+		a.height = Math.max(a.left.height, a.right.height)+1;
+		c.height = Math.max(c.left.height, c.right.height)+1;
+		// now we can calculate the height of b
+		b.height = Math.max(b.left.height, b.right.height)+1;
+		return b;
+	}
 	
 	/**
 	 * @param root2
@@ -269,7 +374,7 @@ public class MyAVLTree<K extends Comparable<? super K>, E> implements
 		else inN = in+"-"; // root of the tree
 		if ( ! r.right.isExternal()) System.out.println(inNeu+" |");
 		else System.out.println(inNeu);
-		System.out.println(inN+r.key()+"(h="+r.height+")");//+":"+r.elem+"("+r.height+")"); 
+		System.out.println(inN+r.key()+"(h="+r.height+")"+":"+r.elem+")"); 
 		// left subtree
 		inNeu = in;
 		if (r.isLeftChild()){
@@ -281,15 +386,24 @@ public class MyAVLTree<K extends Comparable<? super K>, E> implements
 
 	public static void main(String[] argv){
 		MyAVLTree<Integer, String> t = new MyAVLTree<>();
-		Random rand = new Random();
-		int n  = 10;
+		Random rand = new Random(34643);
+		int n  = 1000000;
 		Locator<Integer,String>[] locs = new Locator[n];
 		long time1 = System.currentTimeMillis();
 		for (int i=0;i<n;i++) {
-			locs[i]=t.insert(rand.nextInt(90)+10,""+i);
-			// locs[i]=t.insert(i, "bla");
+			// locs[i]=t.insert(rand.nextInt(n),""+i);
+			locs[i]=t.insert(i, "bla");
 		}
-		t.print();
+		long time2 = System.currentTimeMillis(); 
+		System.out.println(time2-time1);
+		System.out.println(t.root.height);
+		// System.out.println((t.find(13).element()));
+//		t.print();
+//		Locator<Integer,String> loc = t.min();
+//		while (loc != null){
+//			System.out.println(loc.key());
+//			loc = t.next(loc);
+//		}
 	}
 
 }
