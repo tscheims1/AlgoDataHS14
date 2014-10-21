@@ -88,10 +88,18 @@ public class MyAVLTree<K extends Comparable<? super K>, E> implements
 	}
 
 	public Locator<K, E> find(K key) {
-		// returns the leftmost occurence of
-		// 'key' or null
-
-		return null;
+		AVLNode n = root;
+		AVLNode found = null;
+		while ( ! n.isExternal()){
+			int comp = key.compareTo(n.key);
+			if (comp == 0){
+				found = n;
+				n = n.left;
+			}
+			else if (comp > 0) n = n.right;
+			else n = n.left;
+		}
+		return found;
 	}
 
 	/* (non-Javadoc)
@@ -126,6 +134,7 @@ public class MyAVLTree<K extends Comparable<? super K>, E> implements
 		}
 		n.expand(key, o);
 		size++;
+		adjustHeightAboveAndRebalance(n);
 		return n;
 	}
 
@@ -133,11 +142,26 @@ public class MyAVLTree<K extends Comparable<? super K>, E> implements
 		// corrrect the height of all ancesters of n
 		n = n.parent;
 		while (n != null){
-			
+			int newHeight = 1+Math.max(n.left.height,n.right.height);
+			boolean unbalanced = Math.abs(n.left.height-n.right.height) > 1;
+			if (newHeight == n.height && ! unbalanced) break;
+			n.height = newHeight;
+			if (unbalanced) n=restructure(n);
+			n=n.parent;
 		}
 	}
 	
 	
+
+
+	/**
+	 * @param n
+	 * @return
+	 */
+	private MyAVLTree<K, E>.AVLNode  restructure(AVLNode n) {
+		// TODO Auto-generated method stub
+		return n;
+	}
 
 
 	/* (non-Javadoc)
@@ -258,7 +282,7 @@ public class MyAVLTree<K extends Comparable<? super K>, E> implements
 	public static void main(String[] argv){
 		MyAVLTree<Integer, String> t = new MyAVLTree<>();
 		Random rand = new Random();
-		int n  = 20;
+		int n  = 10;
 		Locator<Integer,String>[] locs = new Locator[n];
 		long time1 = System.currentTimeMillis();
 		for (int i=0;i<n;i++) {
