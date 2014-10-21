@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Random;
 
-
 /**
  * @author ps
  *
@@ -122,6 +121,9 @@ public class MyAVLTree<K extends Comparable<? super K>, E> implements
 		return null;
 	}
 
+	private void adjustHeightAboveAndRebalance(AVLNode n){
+		// corrrect the height of all ancesters of n
+	}
 	
 	
 
@@ -195,7 +197,6 @@ public class MyAVLTree<K extends Comparable<? super K>, E> implements
 		return null;
 	}
 
-
 	/* (non-Javadoc)
 	 * @see examples.OrderedDictionary#sortedLocators()
 	 */
@@ -204,19 +205,55 @@ public class MyAVLTree<K extends Comparable<? super K>, E> implements
 		// TODO Auto-generated method stub
 		return null;
 	}
+	
+	public void print(){
+		print(root,""); 
+	}
+	
+	
+	/**
+	 * @param root2
+	 */
+	private void print(AVLNode r, String in) {
+		if (r.isExternal()) return;
+		print(r.right,in+"..");
+		System.out.println(in+r.key);
+		print(r.left,in+"..");
+	}
+	private void prittyPrint(AVLNode r, String in) {
+		if (r.isExternal()) return;		
+		// right subtree 
+		int sLen = in.length();
+		String inNeu = in;
+		if (r.isRightChild()) inNeu = in.substring(0,sLen-2)+"  ";
+		prittyPrint(r.right,inNeu+" |");
+		// root of the subtree
+		String inN = in;
+		if (sLen>0) inN = in.substring(0,sLen-1)+"+-";
+		else inN = in+"-"; // root of the tree
+		if ( ! r.right.isExternal()) System.out.println(inNeu+" |");
+		else System.out.println(inNeu);
+		System.out.println(inN+r.key()+"(h="+r.height+")");//+":"+r.elem+"("+r.height+")"); 
+		// left subtree
+		inNeu = in;
+		if (r.isLeftChild()){
+			inNeu = in.substring(0,sLen-2)+"  ";
+		}
+		prittyPrint(r.left,inNeu+" |");
+	}
+
+
 	public static void main(String[] argv){
 		MyAVLTree<Integer, String> t = new MyAVLTree<>();
-		Random rand = new Random(3434534);
-		int n  = 1000;
+		Random rand = new Random();
+		int n  = 10;
 		Locator<Integer,String>[] locs = new Locator[n];
 		long time1 = System.currentTimeMillis();
 		for (int i=0;i<n;i++) {
-			locs[i]=t.insert(rand.nextInt(n),""+i);
+			locs[i]=t.insert(rand.nextInt(90)+10,""+i);
 			//locs[i]=t.insert(i, "bla");
 		}
-		for (int i=0;i<n/2;i++) {
-			t.remove(t.find(locs[i].key()));
-		}
+		t.print();
 	}
 
 }
