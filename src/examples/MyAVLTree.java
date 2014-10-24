@@ -263,7 +263,7 @@ public class MyAVLTree<K extends Comparable<? super K>, E> implements
 	@Override
 	public Locator<K, E> min() {
 		AVLNode n = root;
-		if (n == null) return null;
+		if (root.isExternal()) return null;
 		while ( ! n.left.isExternal()) n = n.left;
 		return n;
 	}
