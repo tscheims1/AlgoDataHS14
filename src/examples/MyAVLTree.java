@@ -236,7 +236,7 @@ public class MyAVLTree<K extends Comparable<? super K>, E> implements
 	public Locator<K, E> next(Locator<K, E> loc) {
 		AVLNode n = checkAndCast(loc);
 		if (n.right.isExternal()){
-			while (n.isLeftChild()) n=n.parent;
+			while (n.isRightChild()) n=n.parent;
 			n=n.parent;
 		}
 		else {
@@ -262,9 +262,10 @@ public class MyAVLTree<K extends Comparable<? super K>, E> implements
 	 */
 	@Override
 	public Locator<K, E> min() {
-		//retuns the leftmost (internal) locator
-		// TODO Auto-generated method stub
-		return null;
+		AVLNode n = root;
+		if (n == null) return null;
+		while ( ! n.left.isExternal()) n = n.left;
+		return n;
 	}
 
 
@@ -443,11 +444,11 @@ public class MyAVLTree<K extends Comparable<? super K>, E> implements
 		System.out.println(t.root.height);
 		// System.out.println((t.find(13).element()));
 		t.print();
-//		Locator<Integer,String> loc = t.min();
-//		while (loc != null){
-//			System.out.println(loc.key());
-//			loc = t.next(loc);
-//		}
+		Locator<Integer,String> loc = t.min();
+		while (loc != null){
+			System.out.println(loc.key());
+			loc = t.next(loc);
+		}
 	}
 
 }
