@@ -140,15 +140,8 @@ public class MyAVLTree<K extends Comparable<? super K>, E> implements
 
 	private void adjustHeightAboveAndRebalance(AVLNode n){
 		// corrrect the height of all ancesters of n
-		n = n.parent;
-		while (n != null){
-			int newHeight = 1+Math.max(n.left.height,n.right.height);
-			boolean unbalanced = Math.abs(n.left.height-n.right.height) > 1;
-			if (newHeight == n.height && ! unbalanced) break;
-			n.height = newHeight;
-			if (unbalanced) n=restructure(n);
-			n=n.parent;
-		}
+		// TODO Auto-generated method stub
+
 	}
 	
 	
@@ -161,31 +154,7 @@ public class MyAVLTree<K extends Comparable<? super K>, E> implements
 	 */
 	@Override
 	public void remove(Locator<K, E> loc) {
-		AVLNode n = checkAndCast(loc);
-		AVLNode w = null;
-		if (n.left.isExternal() || n.right.isExternal()){
-			w = removeAboveExternal(n);
-		}
-		else {
-			// find a candidate to replace  'loc'
-			AVLNode v = n.left;
-			while (! v.right.isExternal()) v=v.right;
-			w = removeAboveExternal(v);
-			// replace n with v
-			v.parent = n.parent;
-			if (v.parent == null) root=v;
-			else if (n.isLeftChild()) n.parent.left = v;
-			else if (n.isRightChild()) n.parent.right = v;
-			v.height = n.height;
-			v.left = n.left;
-			v.left.parent = v;
-			v.right = n.right;
-			v.right.parent = v;
-		}
-		adjustHeightAboveAndRebalance(w);
-		size--;
-		n.creator = null;
-		
+		// TODO Auto-generated method stu
 	}
 
 
@@ -193,16 +162,9 @@ public class MyAVLTree<K extends Comparable<? super K>, E> implements
 	 * @param n
 	 */
 	private AVLNode removeAboveExternal(AVLNode n) {
-		AVLNode w;
-		
-		if (n.left.isExternal()) w = n.right;
-		else w = n.left;
-
-		if (n.isLeftChild()) n.parent.left = w;
-		else if (n.isRightChild()) n.parent.right =w;
-		w.parent = n.parent;
-		if (n==root) root = w;
-		return w;
+		// returns the node which replaces n
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 
@@ -231,16 +193,8 @@ public class MyAVLTree<K extends Comparable<? super K>, E> implements
 	 */
 	@Override
 	public Locator<K, E> next(Locator<K, E> loc) {
-		AVLNode n = checkAndCast(loc);
-		if (n.right.isExternal()){
-			while (n.isRightChild()) n = n.parent; 
-			n = n.parent;
-		}
-		else { 
-			n = n.right;
-			while (! n.left.isExternal()) n=n.left;
-		}
-		return n;
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 
@@ -259,10 +213,9 @@ public class MyAVLTree<K extends Comparable<? super K>, E> implements
 	 */
 	@Override
 	public Locator<K, E> min() {
-		if (size == 0) return null;
-		AVLNode n = root;
-		while ( ! n.left.isExternal()) n=n.left;;
-		return n;
+		//retuns the leftmost (internal) locator
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 
@@ -271,6 +224,7 @@ public class MyAVLTree<K extends Comparable<? super K>, E> implements
 	 */
 	@Override
 	public Locator<K, E> max() {
+		// returns the rightmost (internal) locator
 		// TODO Auto-generated method stub
 		return null;
 	}
