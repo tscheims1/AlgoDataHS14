@@ -165,7 +165,20 @@ public class MyAVLTree<K extends Comparable<? super K>, E> implements
 		AVLNode w= null;
 		if (n.left.isExternal() || n.right.isExternal()) w = removeAboveExternal(n);
 		else {
-			
+			// lets find the most right node of the left subtree:
+			AVLNode r = n.left;
+			while ( ! r.right.isExternal()) r = r.right;
+			w = removeAboveExternal(r);
+			// now we replace n by r
+			r.parent = n.parent;
+			if (n.isLeftChild()) r.parent.left=r;
+			else if (n.isRightChild()) r.parent.right=r;
+			else root = r;
+			r.left = n.left;
+			r.left.parent = r;
+			r.right = n.right;
+			r.right.parent = r;
+			r.height = n.height;
 		}
 		adjustHeightAboveAndRebalance(w);
 		size--;
@@ -177,9 +190,22 @@ public class MyAVLTree<K extends Comparable<? super K>, E> implements
 	 * @param n
 	 */
 	private AVLNode removeAboveExternal(AVLNode n) {
-		// returns the node which replaces n
-		// TODO Auto-generated method stub
-		return null;
+		AVLNode w;
+		if (n.left.isExternal()){
+			w = n.right;
+			w.parent = n.parent;
+			if (n.isLeftChild()) w.parent.left = w;
+			else if (n.isRightChild()) w.parent.right = w;
+			else root = w;
+		}
+		else {
+			w = n.left;
+			w.parent = n.parent;
+			if (n.isLeftChild()) w.parent.left = w;
+			else if (n.isRightChild()) w.parent.right = w;
+			else  root = w;
+		}
+		return w;
 	}
 
 
@@ -208,8 +234,16 @@ public class MyAVLTree<K extends Comparable<? super K>, E> implements
 	 */
 	@Override
 	public Locator<K, E> next(Locator<K, E> loc) {
-		// TODO Auto-generated method stub
-		return null;
+		AVLNode n = checkAndCast(loc);
+		if (n.right.isExternal()){
+			while (n.isLeftChild()) n=n.parent;
+			n=n.parent;
+		}
+		else {
+			n=n.right;
+			while ( ! n.right.isExternal() ) n=n.left; 
+		}
+		return n;
 	}
 
 
