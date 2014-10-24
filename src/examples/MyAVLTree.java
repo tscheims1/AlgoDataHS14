@@ -140,8 +140,15 @@ public class MyAVLTree<K extends Comparable<? super K>, E> implements
 
 	private void adjustHeightAboveAndRebalance(AVLNode n){
 		// corrrect the height of all ancesters of n
-		// TODO Auto-generated method stub
-
+		n = n.parent;
+		while (n!=null){
+			int newHeight = 1 + Math.max(n.left.height, n.right.height);
+			boolean unbalanced = Math.abs(n.left.height - n.right.height) > 1;
+			if (! unbalanced && n.height == newHeight) break;
+			n.height = newHeight;
+			if (unbalanced) n = restructure(n);
+			n=n.parent;
+		}
 	}
 	
 	
@@ -154,7 +161,15 @@ public class MyAVLTree<K extends Comparable<? super K>, E> implements
 	 */
 	@Override
 	public void remove(Locator<K, E> loc) {
-		// TODO Auto-generated method stu
+		AVLNode n = checkAndCast(loc);
+		AVLNode w= null;
+		if (n.left.isExternal() || n.right.isExternal()) w = removeAboveExternal(n);
+		else {
+			
+		}
+		adjustHeightAboveAndRebalance(w);
+		size--;
+		n.creator = null;
 	}
 
 
@@ -385,8 +400,8 @@ public class MyAVLTree<K extends Comparable<? super K>, E> implements
 		Locator<Integer,String>[] locs = new Locator[n];
 		long time1 = System.currentTimeMillis();
 		for (int i=0;i<n;i++) {
-			// locs[i]=t.insert(rand.nextInt(n),""+i);
-			locs[i]=t.insert(i, "bla");
+			 locs[i]=t.insert(rand.nextInt(n),""+i);
+			//locs[i]=t.insert(i, "bla");
 		}
 		for (int i= 0; i<n/2; i++ ) t.remove(locs[i]);
 		long time2 = System.currentTimeMillis(); 
