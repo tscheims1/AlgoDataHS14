@@ -120,7 +120,7 @@ public class MySkipList<K extends Comparable<? super K>, E> implements
 	 */
 	@Override
 	public Locator<K, E>[] findAll(K key) {
-		SLNode n = ((SLNode) closestBefore(key)).next;
+		SLNode n = (SLNode) find(key); // returns the leftmost occurence
 		if (n==null) return new Locator[0];
 		ArrayList<Locator<K,E>> al = new ArrayList<>();
 		while(n.key.compareTo(key)==0){
