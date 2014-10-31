@@ -195,7 +195,7 @@ public class SortTest {
 		// get Time
 		te1=System.currentTimeMillis();
 		t1 = threadBean.getCurrentThreadCpuTime();
-		heapSort(a);
+		quickSort(a);
 		te2 = System.currentTimeMillis();
 		t2 = threadBean.getCurrentThreadCpuTime();
 		time=t2-t1;
