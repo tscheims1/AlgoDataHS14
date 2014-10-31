@@ -225,7 +225,7 @@ public class MySkipList<K extends Comparable<? super K>, E> implements
 		if (comp==0){
 			pos = pos.prev;
 			// still equal?
-			if (pos == bottomLeft) pos = null;
+			if (pos == bottomLeft) return null;
 			while (key.compareTo(pos.key)==0) pos=pos.prev;
 		}
 		else if (comp>0){
