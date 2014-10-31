@@ -151,6 +151,29 @@ public class MySkipList<K extends Comparable<? super K>, E> implements
 		nNew.prev = pos;
 		nNew.next.prev=nNew;
 		nNew.prev.next=nNew;
+		SLNode pb = nNew;
+		// build index
+		boolean generateIndexNode = rand.nextDouble()<p;
+		while (generateIndexNode){
+			// System.out.println("index generated");
+			while (pos.above==null) pos = pos.prev;
+			pos = pos.above;
+			// create a new index
+			SLNode index = new SLNode();
+			index.key = key;			
+			index.prev = pos;
+			index.next = pos.next;
+			pos.next.prev = index;
+			pos.next = index;
+			index.below=pb;
+			pb.above = index;
+			pb=index;
+			
+			// if pos is topLeft we have to expand by one index level
+			if (pos == topLeft) expand();
+			generateIndexNode = rand.nextDouble()<p;
+		}
+		
 
 		size++;
 		return nNew;
