@@ -106,8 +106,12 @@ public class MySkipList<K extends Comparable<? super K>, E> implements
 	}
 
 	private SLNode search(K key){
-		//to do ...
-		return null;		
+		SLNode pos = topLeft;
+		while (pos.below != null){
+			pos = pos.below;
+			while (key.compareTo(pos.next.key) >=0) pos = pos.next;
+		}
+		return pos;		
 	}
 	
 	
@@ -137,14 +141,17 @@ public class MySkipList<K extends Comparable<? super K>, E> implements
 		SLNode pos = search(key);
 		// we take the rightmost Locator with valid key
 		while (pos.next.key.compareTo(key)== 0) pos=pos.next;		
-		// now we want to insert a node at the position pos.next:
-		
+		// now we want to insert a node at the position pos.next:		
 		SLNode nNew = new SLNode();
-		// ...................
+		nNew.key = key;
+		nNew.elem = o;
 		
-		
-		
-		
+		// einfügen hinter pos
+		nNew.next = pos.next;
+		nNew.prev = pos;
+		nNew.next.prev=nNew;
+		nNew.prev.next=nNew;
+
 		size++;
 		return nNew;
 	}
