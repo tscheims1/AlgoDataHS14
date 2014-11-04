@@ -50,7 +50,7 @@ public class MySkipList<K extends Comparable<? super K>, E> implements
 	// 
 	private int size;
 	private Random rand = new Random();
-	private double p = 0.5; // index probability
+	private double p = 0.3; // index probability
 	private int height = 2;
 	
 	public MySkipList(K min, K max){
@@ -397,7 +397,7 @@ public class MySkipList<K extends Comparable<? super K>, E> implements
 	public static void main(String[] args) {
 		MySkipList<Integer, String> sl = new MySkipList<>(Integer.MIN_VALUE,Integer.MAX_VALUE);
 		Random rand = new Random();
-		int n  = 4000;
+		int n  = 1000000;
 		Locator<Integer,String>[] locs = new Locator[n];
 		long time1 = System.currentTimeMillis();
 		for (int i=0;i<n;i++) {
@@ -416,7 +416,7 @@ public class MySkipList<K extends Comparable<? super K>, E> implements
 //			Locator<Integer, String> loc = it.next();
 //			System.out.println(loc.key()+" element: "+loc.element());
 //		}
-		sl.print();
+//		sl.print();
 //		sl.remove(locs[15]);
 //		sl.print();
 //		Locator<Integer,String> loc = sl.closestBefore(83);

@@ -11,9 +11,11 @@ import java.util.Random;
  */
 public class SortTest {
 	
+	
 	public static long cnt;
 	static Random rand = new Random();
-
+	static int [] b;
+	
 	public static void heapSort(int [] a){
 		int n = a.length;
 		// first we make 'a' a max-heap:
@@ -178,7 +180,27 @@ public class SortTest {
 		return left;      // return the final position of the pivot (to be changed!)
 	}
 
+	public static void mergeSort(int [] a){
+		b = new int[a.length];
+		// recursive version:
+		mSort(a,0,a.length-1);
+		// iterative version: 
+
+	}
 	
+	static private void mSort(int [] a, int from, int to){
+		// sort recursively a[from..to]
+		if (from >= to) return;
+		int med = (from+to)/2;
+		mSort(a,from,med); 
+		mSort(a,med+1,to);
+		merge(a,from,med,to);
+	}
+	
+	static private void merge(int[] a, int from, int med, int to) {
+		// ...
+	}
+
 
 	public static void main(String[] args) {
 		long t1=0,t2=0,te1=0,te2=0,eTime=0,time=0;
