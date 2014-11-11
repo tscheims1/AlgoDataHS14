@@ -153,11 +153,26 @@ public class SortTest {
 		// and the remaining elements a[rank+1]..a[a.lenght-1] are all
 		// bigger or equal to a[rank]
 		// to be completed:
-		//----------------
+		qSelect(a,0,a.length-1,rank);
 		
 	}
 
 	
+	/**
+	 * @param a
+	 * @param i
+	 * @param j
+	 * @param rank
+	 */
+	private static void qSelect(int[] a, int from, int to, int rank) {
+		int piv = partition(a, from, to);
+		if (piv==rank) return;
+		else if (piv>rank) qSelect(a,from,piv-1,rank);
+		else qSelect(a,piv+1, to,rank);
+	}
+
+
+
 	/**
 	 * partitions the range such that all of the elements 
 	 * in the range a[from..piv-1] are smaller than a[piv]
@@ -237,7 +252,7 @@ public class SortTest {
 
 	public static void main(String[] args) {
 		long t1=0,t2=0,te1=0,te2=0,eTime=0,time=0;
-		int n = 10000000;
+		int n = 100000000;
 		// we need a random generator
 		Random rand=new Random();
 		//rand.setSeed(54326346); // initialize always in the same state
@@ -250,7 +265,7 @@ public class SortTest {
 		// get Time
 		te1=System.currentTimeMillis();
 		t1 = threadBean.getCurrentThreadCpuTime();
-		quickSort(a);
+		quickSelect(a,n/2);
 		te2 = System.currentTimeMillis();
 		t2 = threadBean.getCurrentThreadCpuTime();
 		time=t2-t1;
