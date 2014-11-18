@@ -18,13 +18,36 @@ public class GraphExamples<V,E> {
 	static final private Object DISCOVERY = new Object();
 	
 	private Graph<V,E> g;
+	private Vertex<V> [] vertexArray;
 
 	public GraphExamples(Graph<V,E> g){
 		this.g=g;
 	}
 	
 	
+	public void setNumbers(){
+		vertexArray = new  Vertex[g.numberOfVertices()];
+		Iterator<Vertex<V>> it = g.vertices();
+		int num = 0;
+		while(it.hasNext()) {
+			vertexArray[num]=it.next();
+			vertexArray[num].set(NUMBER, num++);
+		}
+	}
 	
+	public int[][] getAdjacencyMatrix(){
+		setNumbers();
+		int n = g.numberOfVertices();
+		int [][] ad = new int[n][n];
+		
+		
+		
+		return ad;
+	}
+	
+	public boolean isConnected(int ad[][]){
+		return false;
+	}
 	
 	/**
 	 * @return the number of connected components of 'g'
