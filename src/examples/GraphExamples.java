@@ -39,16 +39,40 @@ public class GraphExamples<V,E> {
 		setNumbers();
 		int n = g.numberOfVertices();
 		int [][] ad = new int[n][n];
-		
-		
-		
+		boolean directed = g.isDirected();
+		Iterator<Edge<E>> it = g.edges();
+		while ( it.hasNext()) {
+			Vertex<V>[] endPts = g.endVertices(it.next()); 
+			int i = (int) endPts[0].get(NUMBER);
+			int k = (int) endPts[1].get(NUMBER);
+			ad[i][k]=1;
+			if (! directed) ad[k][i]=1;
+		}
 		return ad;
 	}
 	
-	public boolean isConnected(int ad[][]){
-		return false;
+	public int[] shortestPath(int[][] ad, int from, int to){
+		// returns the vertex numbers of the shortest path 
+		// (hopping distance) fromn 'from' to 'to' or 'null'
+		// if no path exists
+		return null;
 	}
 	
+	public boolean isConnected(int ad[][]){
+		int n = ad.length;
+		boolean [] visited = new boolean[n];
+		visitDFS(ad,0,visited);
+		for (boolean v:visited) if ( ! v) return false;
+		return true;
+	}
+	
+	private void visitDFS(int [][] ad, int p, boolean[] visited) {
+		visited[p] = true;
+		for (int i = 0; i < ad.length; i++){
+			if (ad[p][i]==1 && ! visited[i]) visitDFS(ad, i, visited);
+		}
+	}
+
 	/**
 	 * @return the number of connected components of 'g'
 	 */
@@ -193,10 +217,15 @@ public class GraphExamples<V,E> {
 		System.out.println(g);
 		ge.setGateways();
 		System.out.print("Path: ");
-		for(Vertex<String>v:ge.shortestPath(vA,vG)){
-			System.out.print(v);
-		};
+		Vertex<String> [] path = ge.shortestPath(vA,vG);
+		if (path == null) System.out.println("no path");
+		else {
+			for(Vertex<String>v:path) System.out.print(v);
+		}
 		System.out.println();
+		ge.setNumbers();
+		int [][] ad = ge.getAdjacencyMatrix();
+		System.out.println(ge.isConnected(ad));
 		
 //	A__B     F
 //	  /|\   /|
