@@ -35,6 +35,30 @@ public class GraphExamples<V,E> {
 		}
 	}
 	
+	public int[][] getGatewayMatrix(int [][] ad){
+		int n = ad.length;
+		int [][] dist = new int[n][n];
+		int [][] gw = new int[n][n];
+		for (int i=0; i<n;i++)
+			for (int k=0;k<n;k++){
+				dist[i][k] = ad[i][k];
+				if (i!=k && ad[i][k]!=1) dist[i][k]= n; // infinity!
+				gw[i][k] = -1;
+				if (ad[i][k]==1) gw[i][k] = k;
+			}
+		for (int k=0;k<n;k++)
+			for (int i=0;i<n;i++)
+				for (int j=0;j<n;j++){
+					int newDist = dist[i][k]+dist[k][j];
+					if (newDist < dist[i][j]) {
+						dist[i][j] =newDist;
+						gw[i][j] = gw[i][k];
+					}
+				}
+		return gw;
+	}
+	
+	
 	public int[][] getAdjacencyMatrix(){
 		setNumbers();
 		int n = g.numberOfVertices();
@@ -55,7 +79,40 @@ public class GraphExamples<V,E> {
 		// returns the vertex numbers of the shortest path 
 		// (hopping distance) fromn 'from' to 'to' or 'null'
 		// if no path exists
-		return null;
+		int n = ad.length;
+		int [] visitedFrom = new int[n];
+		Arrays.fill(visitedFrom,-1);
+		visitedFrom[to] = to;
+		LinkedList<Integer> q = new LinkedList<>();
+		q.addLast(to); // we start at to (for directed graphs!)
+		boolean found=false;
+		while ( ! q.isEmpty() && ! found){
+			int p = q.removeFirst();
+			for (int i= 0;i<n;i++){
+				// we take backwards direction!
+				if (ad[i][p]==1 && visitedFrom[i] == -1 ){
+					visitedFrom[i] = p;
+					q.addLast(i);
+					if (i==from) found = true;
+				}
+			}
+		}
+		
+		if (visitedFrom[from] == -1) return null;
+		int len = 2;
+		int p = from;
+		// get the length of the path
+		while (visitedFrom[p] != to) {
+			len++;
+			p=visitedFrom[p];
+		}
+		// now we construct the path
+		int [] path = new int[len];
+		for (int i=0; i<len; i++) {
+			path[i] = from;
+			from = visitedFrom[from];
+		}
+		return path;
 	}
 	
 	public boolean isConnected(int ad[][]){
@@ -226,6 +283,24 @@ public class GraphExamples<V,E> {
 		ge.setNumbers();
 		int [][] ad = ge.getAdjacencyMatrix();
 		System.out.println(ge.isConnected(ad));
+		int [] spath = ge.shortestPath(ad,(int)vC.get(NUMBER),(int)vF.get(NUMBER));
+		if (spath == null) System.out.println("no path");
+		else {
+			for (int i=0;i<spath.length;i++){
+				System.out.println(ge.vertexArray[spath[i]]);
+			}
+		}
+
+		int [][] gw = ge.getGatewayMatrix(ad);
+		int n = gw.length;
+		for (int i=0;i<n;i++) System.out.println(ge.vertexArray[i]+", "+i);
+		for (int i=0;i<n;i++){
+			System.out.println();
+			for (int k=0;k<n;k++){
+				System.out.print(gw[i][k]+", ");
+			}
+		}
+			
 		
 //	A__B     F
 //	  /|\   /|
