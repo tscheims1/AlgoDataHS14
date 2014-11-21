@@ -16,6 +16,12 @@ public class GraphExamples<V,E> {
 	static final private Object NUMBER = new Object();
 	static final private Object VISITED = new Object();
 	static final private Object DISCOVERY = new Object();
+	// for dijkstra:
+	static final private Object WEIGHT = new Object();
+	static final private Object DISTANCE = new Object();
+	static final private Object PQLOCATOR = new Object();
+	
+
 	
 	private Graph<V,E> g;
 	private Vertex<V> [] vertexArray;
@@ -54,6 +60,15 @@ public class GraphExamples<V,E> {
 			if (! directed) ad[k][i]=1;
 		}
 		return ad;
+	}
+	
+	
+	public void dijkstra(Vertex<V> s){
+		// sets the attribute 's' of each vertex 'u' from wich 
+		// we can reach 's' to 'g' where 'g' is the gateway
+		// of 'u' on the shortest path from 'u' to 's' 
+		MyPriorityQueue<Double, Vertex<V>> q = new MyPriorityQueue<>();
+		
 	}
 	
 	public int[] shortestPath(int[][] ad, int from, int to){
